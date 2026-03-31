@@ -61,12 +61,35 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
     setSaving(false);
   }
 
+  const statusConfig = {
+    revision_pending: { label: 'PENDIENTE DE REVISIÓN', color: 'bg-amber-100 text-amber-700 border-amber-200', header: 'bg-amber-50/50' },
+    planned: { label: 'PUBLICADO / PLANIFICADO', color: 'bg-green-100 text-green-700 border-green-200', header: 'bg-green-50/50' },
+    published: { label: 'PUBLICADO', color: 'bg-green-100 text-green-700 border-green-200', header: 'bg-green-50/50' },
+    finished: { label: 'FINALIZADO', color: 'bg-gray-100 text-gray-700 border-gray-200', header: 'bg-gray-50/50' },
+    canceled: { label: 'CANCELADO', color: 'bg-red-100 text-red-700 border-red-200', header: 'bg-red-50/50' },
+  };
+
+  const currentStatus = statusConfig[data.status as keyof typeof statusConfig] || statusConfig.revision_pending;
+
   return (
     <div id="editor" className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 mb-20">
-      <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-        <div>
-          <h2 className="text-xl font-black text-gray-800 tracking-tight">EDITANDO REGISTRO</h2>
-          <p className="text-xs text-gray-500 font-mono">{data.id}</p>
+      <div className={`p-6 border-b border-gray-100 flex justify-between items-center ${currentStatus.header}`}>
+        <div className="flex items-center gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-xl font-black text-gray-800 tracking-tight uppercase">
+                {data.status === 'revision_pending' ? 'Revisando Pendiente' : 'Editando Registro'}
+              </h2>
+              <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${currentStatus.color}`}>
+                {currentStatus.label}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-gray-500 font-mono">
+              <span>ID: {data.id}</span>
+              <span>•</span>
+              <span>Creado: {new Date(data.created_at).toLocaleDateString('es-ES')}</span>
+            </div>
+          </div>
         </div>
         <button onClick={onCancel} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition-colors">
           <XCircle size={24} />

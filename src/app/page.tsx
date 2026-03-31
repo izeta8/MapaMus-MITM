@@ -7,6 +7,7 @@ import { Tournament } from '@/types';
 import TournamentList from '@/components/TournamentList';
 import TournamentEditor from '@/components/TournamentEditor';
 import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -73,6 +74,10 @@ function DashboardContent() {
   const handleSelect = (t: Tournament) => {
     setSelectedTournament(t);
     scrollToEditor();
+    // Actualizar URL sin recargar
+    const params = new URLSearchParams(window.location.search);
+    params.set('id', t.id);
+    window.history.replaceState(null, '', `?${params.toString()}`);
   };
 
   if (loading) {
@@ -89,13 +94,21 @@ function DashboardContent() {
   return (
     <main className="min-h-screen bg-gray-50 p-4 md:p-8 pb-24">
       <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">MapaMus MITM</h1>
             <p className="text-gray-500">Panel de revisión de torneos scrapper</p>
           </div>
-          <div className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
-            {tournaments.length} pendientes
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/manage" 
+              className="bg-white border border-gray-200 text-gray-700 px-6 py-2 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              GESTIONAR TODOS
+            </Link>
+            <div className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
+              {tournaments.length} pendientes
+            </div>
           </div>
         </div>
 
