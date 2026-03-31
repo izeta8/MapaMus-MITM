@@ -1,23 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Tournament } from '@/types';
 import TournamentList from '@/components/TournamentList';
 import TournamentEditor from '@/components/TournamentEditor';
 import { Loader2 } from 'lucide-react';
 
-export default function Home() {
+function DashboardContent() {
+  const searchParams = useSearchParams();
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 1. Cargar lista de pendientes
   useEffect(() => {
     fetchTournaments();
   }, []);
 
+  // 2. Manejar el Query Param ?id=... de forma independiente y robusta
+  useEffect(() => {
+    const idFromUrl = searchParams.get('id');
+    if (idFromUrl) {
+      loadTournamentById(idFromUrl);
+    }
+  }, [searchParams]);
+
   async function fetchTournaments() {
-    setLoading(true);
     const { data, error } = await supabase
       .from('tournaments')
       .select('*')
@@ -30,12 +40,39 @@ export default function Home() {
     setLoading(false);
   }
 
-  const handleSelect = (t: Tournament) => {
-    setSelectedTournament(t);
+  async function loadTournamentById(id: string) {
+    // Primero miramos si ya está en nuestra lista local para ahorrar una petición
+    const localMatch = tournaments.find(t => t.id === id);
+    if (localMatch) {
+      setSelectedTournament(localMatch);
+      scrollToEditor();
+      return;
+    }
+
+    // Si no está en la lista (porque quizás no es 'revision_pending'), lo buscamos en la DB
+    const { data, error } = await supabase
+      .from('tournaments')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (!error && data) {
+      setSelectedTournament(data as Tournament);
+      scrollToEditor();
+    } else if (error) {
+      console.error("Error cargando torneo por ID:", error.message);
+    }
+  }
+
+  const scrollToEditor = () => {
     setTimeout(() => {
       document.getElementById('editor')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-    console.log(t)
+    }, 300);
+  };
+
+  const handleSelect = (t: Tournament) => {
+    setSelectedTournament(t);
+    scrollToEditor();
   };
 
   if (loading) {
@@ -62,27 +99,38 @@ export default function Home() {
           </div>
         </div>
 
-        {/* List Component */}
+        {/* Lista de torneos pendientes */}
         <TournamentList 
           tournaments={tournaments} 
           selectedId={selectedTournament?.id} 
           onSelect={handleSelect} 
         />
 
-        {/* Editor Component */}
+        {/* Editor (se muestra si hay un torneo seleccionado, ya sea por clic o por URL) */}
         {selectedTournament && (
-          <TournamentEditor 
-            tournament={selectedTournament}
-            onSaved={fetchTournaments}
-            onPublished={() => {
-              setSelectedTournament(null);
-              fetchTournaments();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onCancel={() => setSelectedTournament(null)}
-          />
+          <div className="mt-12">
+            <h3 className="text-lg font-bold text-gray-400 mb-4 uppercase tracking-widest">Editor de Registro</h3>
+            <TournamentEditor 
+              tournament={selectedTournament}
+              onSaved={fetchTournaments}
+              onPublished={() => {
+                setSelectedTournament(null);
+                fetchTournaments();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onCancel={() => setSelectedTournament(null)}
+            />
+          </div>
         )}
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin text-blue-600" /></div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
