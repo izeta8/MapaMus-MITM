@@ -109,7 +109,6 @@ function DashboardContent() {
         {/* Editor (se muestra si hay un torneo seleccionado, ya sea por clic o por URL) */}
         {selectedTournament && (
           <div className="mt-12">
-            <h3 className="text-lg font-bold text-gray-400 mb-4 uppercase tracking-widest">Editor de Registro</h3>
             <TournamentEditor 
               tournament={selectedTournament}
               onSaved={fetchTournaments}
