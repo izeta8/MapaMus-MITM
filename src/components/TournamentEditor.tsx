@@ -175,14 +175,19 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
                 </select>
               </div>
               <div className="col-span-1 space-y-2">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Tantos</label>
-                <input
-                  type="number"
-                  className="w-full px-2 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-center font-bold"
-                  value={data.points_modality || ''}
-                  onChange={e => setData({ ...data, points_modality: parseInt(e.target.value) })}
-                />
+                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest text-black">Tantos</label>
+                  <select 
+                    className="w-full px-2 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-center font-bold"
+                    value={data.points_modality || ''}
+                    onChange={e => setData({...data, points_modality: e.target.value ? parseInt(e.target.value) : null})}
+                  >
+                    <option value="">-</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                  </select>
               </div>
+
             </div>
 
             <div className="space-y-2">
