@@ -98,7 +98,7 @@ export default function TournamentList({ tournaments, selectedId, onSelect }: To
 
       {tournaments.length === 0 && (
         <div className="px-6 py-12 text-center text-gray-500 italic">
-          No hay torneos esperando revisión
+          No hay torneos esperando revisión.
         </div>
       )}
     </div>
