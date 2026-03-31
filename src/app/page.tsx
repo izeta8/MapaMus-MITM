@@ -35,6 +35,7 @@ export default function Home() {
     setTimeout(() => {
       document.getElementById('editor')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
+    console.log(t)
   };
 
   if (loading) {

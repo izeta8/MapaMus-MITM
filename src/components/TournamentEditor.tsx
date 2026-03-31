@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Tournament } from '@/types';
 import MapPicker from './MapPicker';
 import { Save, CheckCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { updateTournament } from '@/lib/actions';
 
 interface TournamentEditorProps {
   tournament: Tournament;
@@ -24,32 +24,27 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
 
   async function handleSave() {
     setSaving(true);
-    const { error } = await supabase
-      .from('tournaments')
-      .update(data)
-      .eq('id', data.id);
+    const result = await updateTournament(data);
 
-    if (!error) {
+    if (result.success) {
       alert('Cambios guardados');
       onSaved();
     } else {
-      alert('Error: ' + error.message);
+      alert('Error: ' + result.error);
     }
     setSaving(false);
   }
 
   async function handlePublish() {
     setSaving(true);
-    const { error } = await supabase
-      .from('tournaments')
-      .update({ ...data, status: 'published' })
-      .eq('id', data.id);
+    const publishedData = { ...data, status: 'planned' as any };
+    const result = await updateTournament(publishedData);
 
-    if (!error) {
+    if (result.success) {
       alert('Torneo publicado con éxito');
       onPublished();
     } else {
-      alert('Error: ' + error.message);
+      alert('Error: ' + result.error);
     }
     setSaving(false);
   }
