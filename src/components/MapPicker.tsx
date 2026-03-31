@@ -16,9 +16,9 @@ interface MapPickerProps {
   onPositionChange: (lat: number, lng: number) => void;
 }
 
-const SEA_LOCATION = { lat: 43.424782, lng: -2.029647 };
+// Nueva ubicación por defecto solicitada
+const SEA_DEFAULT = { lat: 41.409265, lng: -2.039183 };
 
-// Componente para manejar movimientos de cámara (vuelos)
 const MapHandler = ({ center }: { center: google.maps.LatLngLiteral }) => {
   const map = useMap();
   useEffect(() => {
@@ -29,7 +29,6 @@ const MapHandler = ({ center }: { center: google.maps.LatLngLiteral }) => {
   return null;
 };
 
-// Componente del buscador
 const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.maps.places.PlaceResult) => void }) => {
   const map = useMap();
   const places = useMapsLibrary('places');
@@ -51,7 +50,7 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.ma
       const place = autocomplete.getPlace();
       if (place.geometry?.location) {
         onPlaceSelect(place);
-        map?.setZoom(17);
+        map?.setZoom(4);
       }
     });
   }, [autocomplete, map, onPlaceSelect]);
@@ -63,23 +62,20 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.ma
         type="text"
         placeholder="Buscar bar, restaurante o calle..."
         className="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-xl focus:ring-2 focus:ring-blue-500 text-black font-medium outline-none"
-        onClick={(e) => e.stopPropagation()} // Evita que el clic en el input mueva el mapa
+        onClick={(e) => e.stopPropagation()}
       />
     </div>
   );
 };
 
 export default function MapPicker({ lat, lng, onPositionChange }: MapPickerProps) {
-  const [markerPosition, setMarkerPosition] = useState(SEA_LOCATION);
-  const [cameraCenter, setCameraCenter] = useState(SEA_LOCATION);
+  const [markerPosition, setMarkerPosition] = useState(SEA_DEFAULT);
+  const [cameraCenter, setCameraCenter] = useState(SEA_DEFAULT);
 
-  // Sincronizar cuando cambia el torneo desde fuera
   useEffect(() => {
-    if (lat && lng && lat !== 0) {
-      const pos = { lat, lng };
-      setMarkerPosition(pos);
-      setCameraCenter(pos);
-    }
+    const pos = (lat && lng && lat !== 0) ? { lat, lng } : SEA_DEFAULT;
+    setMarkerPosition(pos);
+    setCameraCenter(pos);
   }, [lat, lng]);
 
   const onMarkerDragEnd = useCallback((e: google.maps.MapMouseEvent) => {
@@ -106,8 +102,8 @@ export default function MapPicker({ lat, lng, onPositionChange }: MapPickerProps
     <div className="h-[500px] w-full rounded-xl overflow-hidden border-2 border-gray-200 bg-gray-100 relative shadow-inner">
       <APIProvider apiKey={apiKey} libraries={['places']}>
         <Map
-          defaultCenter={SEA_LOCATION}
-          defaultZoom={13}
+          defaultCenter={SEA_DEFAULT}
+          defaultZoom={9}
           mapId="tournament-picker"
           gestureHandling={'greedy'}
           disableDefaultUI={false}
