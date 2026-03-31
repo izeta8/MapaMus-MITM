@@ -50,7 +50,7 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.ma
       const place = autocomplete.getPlace();
       if (place.geometry?.location) {
         onPlaceSelect(place);
-        map?.setZoom(4);
+        map?.setZoom(18);
       }
     });
   }, [autocomplete, map, onPlaceSelect]);

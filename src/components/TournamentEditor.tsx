@@ -85,10 +85,10 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
             />
           </div>
           <div className="flex gap-4 justify-center">
-             <div className="bg-gray-100 px-4 py-2 rounded-lg text-[10px] font-mono text-gray-600 border border-gray-200">
+             <div className="bg-gray-100 px-4 py-2 rounded-lg text-sm font-mono text-gray-600 border border-gray-200">
                 LAT: {data.latitude?.toFixed(6)}
              </div>
-             <div className="bg-gray-100 px-4 py-2 rounded-lg text-[10px] font-mono text-gray-600 border border-gray-200">
+             <div className="bg-gray-100 px-4 py-2 rounded-lg text-sm font-mono text-gray-600 border border-gray-200">
                 LON: {data.longitude?.toFixed(6)}
              </div>
           </div>
@@ -114,21 +114,21 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 space-y-2">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Fecha y Hora</label>
                         <input 
                         type="datetime-local"
-                        className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black"
+                        className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-sm"
                         value={data.tournament_date ? new Date(data.tournament_date).toISOString().slice(0, 16) : ''}
                         onChange={e => setData({...data, tournament_date: new Date(e.target.value).toISOString()})}
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Precio (€)</label>
+                    <div className="col-span-1 space-y-2">
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Precio</label>
                         <input 
                         type="number"
-                        className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black font-bold"
+                        className="w-full px-2 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black font-bold text-center"
                         value={data.price_per_couple || ''}
                         onChange={e => setData({...data, price_per_couple: parseFloat(e.target.value)})}
                         />
@@ -137,8 +137,8 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
             </div>
 
             <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 space-y-2">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Reyes</label>
                         <select 
                         className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black font-bold"
@@ -150,11 +150,11 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
                         <option value="8">8 Reyes</option>
                         </select>
                     </div>
-                    <div className="space-y-2">
+                    <div className="col-span-1 space-y-2">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Tantos</label>
                         <input 
                         type="number"
-                        className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black"
+                        className="w-full px-2 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-center font-bold"
                         value={data.points_modality || ''}
                         onChange={e => setData({...data, points_modality: parseInt(e.target.value)})}
                         />
@@ -180,22 +180,22 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
         </div>
 
         {/* Footer de Acciones */}
-        <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row gap-4 justify-end">
+        <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-end">
             <button 
               onClick={handleSave} 
               disabled={saving}
-              className="flex items-center justify-center gap-3 px-10 py-5 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-black hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50 active:scale-95"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-black hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50 active:scale-95"
             >
               <Save size={20} />
-              {saving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+              {saving ? 'GUARDANDO...' : 'GUARDAR'}
             </button>
             <button 
               onClick={handlePublish}
               disabled={saving}
-              className="flex items-center justify-center gap-3 px-12 py-5 bg-green-600 text-white rounded-2xl font-black hover:bg-green-700 transition-all shadow-xl shadow-green-100 disabled:opacity-50 transform hover:-translate-y-1 active:scale-95"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 bg-green-600 text-white rounded-2xl font-black hover:bg-green-700 transition-all shadow-xl shadow-green-100 disabled:opacity-50 transform hover:-translate-y-1 active:scale-95"
             >
               <CheckCircle size={20} />
-              {saving ? 'PUBLICANDO...' : 'PUBLICAR AHORA'}
+              {saving ? 'PUBLICANDO...' : 'PUBLICAR'}
             </button>
         </div>
       </div>
