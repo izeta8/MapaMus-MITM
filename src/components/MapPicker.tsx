@@ -16,9 +16,20 @@ interface MapPickerProps {
   onPositionChange: (lat: number, lng: number) => void;
 }
 
-const SEA_LOCATION = { lat: 43.842236, lng: -2.556456 }; // San Sebastián Centro
+const SEA_LOCATION = { lat: 43.424782, lng: -2.029647 };
 
-// Componente interno para el buscador
+// Componente para manejar movimientos de cámara (vuelos)
+const MapHandler = ({ center }: { center: google.maps.LatLngLiteral }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (map && center) {
+      map.panTo(center);
+    }
+  }, [map, center]);
+  return null;
+};
+
+// Componente del buscador
 const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.maps.places.PlaceResult) => void }) => {
   const map = useMap();
   const places = useMapsLibrary('places');
@@ -27,24 +38,19 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.ma
 
   useEffect(() => {
     if (!places || !inputRef.current) return;
-
-    const options = {
-      fields: ['geometry', 'name', 'formatted_address'],
+    const ac = new places.Autocomplete(inputRef.current, {
+      fields: ['geometry', 'name'],
       componentRestrictions: { country: 'es' }
-    };
-
-    const ac = new places.Autocomplete(inputRef.current, options);
+    });
     setAutocomplete(ac);
   }, [places]);
 
   useEffect(() => {
     if (!autocomplete) return;
-
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       if (place.geometry?.location) {
         onPlaceSelect(place);
-        map?.panTo(place.geometry.location);
         map?.setZoom(17);
       }
     });
@@ -56,35 +62,31 @@ const PlaceAutocomplete = ({ onPlaceSelect }: { onPlaceSelect: (place: google.ma
         ref={inputRef}
         type="text"
         placeholder="Buscar bar, restaurante o calle..."
-        className="w-full px-4 py-3 rounded-lg border-none shadow-2xl focus:ring-2 focus:ring-blue-500 text-black font-medium outline-none"
+        className="w-full px-4 py-3 rounded-lg border border-gray-200 shadow-xl focus:ring-2 focus:ring-blue-500 text-black font-medium outline-none"
+        onClick={(e) => e.stopPropagation()} // Evita que el clic en el input mueva el mapa
       />
     </div>
   );
 };
 
 export default function MapPicker({ lat, lng, onPositionChange }: MapPickerProps) {
-  // Validamos si las coordenadas son reales, si no, usamos Gipuzkoa
-  const initialPos = (lat && lng && lat !== 0) 
-    ? { lat, lng } 
-    : SEA_LOCATION;
+  const [markerPosition, setMarkerPosition] = useState(SEA_LOCATION);
+  const [cameraCenter, setCameraCenter] = useState(SEA_LOCATION);
 
-  const [markerPosition, setMarkerPosition] = useState(initialPos);
-
-  // Sincronizar si cambia el torneo seleccionado
+  // Sincronizar cuando cambia el torneo desde fuera
   useEffect(() => {
     if (lat && lng && lat !== 0) {
-      setMarkerPosition({ lat, lng });
-    } else {
-      setMarkerPosition(SEA_LOCATION);
+      const pos = { lat, lng };
+      setMarkerPosition(pos);
+      setCameraCenter(pos);
     }
   }, [lat, lng]);
 
   const onMarkerDragEnd = useCallback((e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
-      const newLat = e.latLng.lat();
-      const newLng = e.latLng.lng();
-      setMarkerPosition({ lat: newLat, lng: newLng });
-      onPositionChange(newLat, newLng);
+      const newPos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+      setMarkerPosition(newPos);
+      onPositionChange(newPos.lat, newPos.lng);
     }
   }, [onPositionChange]);
 
@@ -93,6 +95,7 @@ export default function MapPicker({ lat, lng, onPositionChange }: MapPickerProps
     if (location) {
       const newPos = { lat: location.lat(), lng: location.lng() };
       setMarkerPosition(newPos);
+      setCameraCenter(newPos);
       onPositionChange(newPos.lat, newPos.lng);
     }
   }, [onPositionChange]);
@@ -103,13 +106,14 @@ export default function MapPicker({ lat, lng, onPositionChange }: MapPickerProps
     <div className="h-[500px] w-full rounded-xl overflow-hidden border-2 border-gray-200 bg-gray-100 relative shadow-inner">
       <APIProvider apiKey={apiKey} libraries={['places']}>
         <Map
-          center={markerPosition}
+          defaultCenter={SEA_LOCATION}
           defaultZoom={13}
           mapId="tournament-picker"
           gestureHandling={'greedy'}
           disableDefaultUI={false}
           className="w-full h-full"
         >
+          <MapHandler center={cameraCenter} />
           <PlaceAutocomplete onPlaceSelect={handlePlaceSelect} />
           
           <AdvancedMarker
