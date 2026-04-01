@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Tournament } from '@/types';
 import MapPicker from './MapPicker';
-import { Save, CheckCircle, XCircle } from 'lucide-react';
-import { updateTournament } from '@/lib/actions';
+import { Save, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import { updateTournament, deleteTournament } from '@/lib/actions';
 
 interface TournamentEditorProps {
   tournament: Tournament;
@@ -64,10 +64,26 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
     setSaving(false);
   }
 
+  async function handleDelete() {
+    if (!confirm('¿Estás seguro de que quieres eliminar este torneo? Esta acción no se puede deshacer.')) {
+      return;
+    }
+    
+    setSaving(true);
+    const result = await deleteTournament(data.id);
+    
+    if (result.success) {
+      alert('✅ Torneo eliminado correctamente');
+      onCancel(); 
+    } else {
+      alert('❌ Error al eliminar: ' + result.error);
+    }
+    setSaving(false);
+  }
+
   const statusConfig = {
-    revision_pending: { label: 'REVISIÓN', color: 'bg-amber-100 text-amber-700 border-amber-200', header: 'bg-amber-50/50' },
-    planned: { label: 'PUBLICADO / PLANIFICADO', color: 'bg-green-100 text-green-700 border-green-200', header: 'bg-green-50/50' },
-    published: { label: 'PUBLICADO', color: 'bg-green-100 text-green-700 border-green-200', header: 'bg-green-50/50' },
+    revision_pending: { label: 'REVISI ÓN', color: 'bg-amber-100 text-amber-700 border-amber-200', header: 'bg-amber-50/50' },
+    planned: { label: 'PUBLICADO', color: 'bg-green-100 text-green-700 border-green-200', header: 'bg-green-50/50' },
     finished: { label: 'FINALIZADO', color: 'bg-gray-100 text-gray-700 border-gray-200', header: 'bg-gray-50/50' },
     canceled: { label: 'CANCELADO', color: 'bg-red-100 text-red-700 border-red-200', header: 'bg-red-50/50' },
   };
@@ -83,9 +99,16 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
               <h2 className="text-xl font-black text-gray-800 tracking-tight uppercase">
                 {data.status === 'revision_pending' ? 'Revisando Pendiente' : 'Editando Registro'}
               </h2>
-              <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${currentStatus.color}`}>
-                {currentStatus.label}
-              </span>
+              <select 
+                className={`px-3 py-1 rounded-full text-[10px] font-black border outline-none appearance-none cursor-pointer hover:opacity-80 transition-opacity ${currentStatus.color}`}
+                value={data.status}
+                onChange={(e) => setData({ ...data, status: e.target.value as any })}
+              >
+                <option value="planned">PLANIFICADO</option>
+                <option value="revision_pending">REVISIÓN</option>
+                <option value="finished">FINALIZADO</option>
+                <option value="canceled">CANCELADO</option>
+              </select>
             </div>
             <div className="flex items-center gap-3 text-xs text-gray-500 font-mono">
               <span>ID: {data.id}</span>
@@ -384,23 +407,34 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
         </div>
 
         {/* Footer de Acciones */}
-        <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-end">
+        <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center">
           <button
-            onClick={handleSave}
+            onClick={handleDelete}
             disabled={saving}
-            className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-black hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50 active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-4 bg-red-50 text-red-600 rounded-2xl font-black hover:bg-red-100 transition-all disabled:opacity-50 active:scale-95 border-2 border-red-100"
           >
-            <Save size={20} />
-            {saving ? 'GUARDANDO...' : 'GUARDAR'}
+            <Trash2 size={20} />
+            {saving ? 'ELIMINANDO...' : 'ELIMINAR REGISTRO'}
           </button>
-          <button
-            onClick={handlePublish}
-            disabled={saving}
-            className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 bg-green-600 text-white rounded-2xl font-black hover:bg-green-700 transition-all shadow-xl shadow-green-100 disabled:opacity-50 transform hover:-translate-y-1 active:scale-95"
-          >
-            <CheckCircle size={20} />
-            {saving ? 'PUBLICANDO...' : 'PUBLICAR'}
-          </button>
+          
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-black hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50 active:scale-95"
+            >
+              <Save size={20} />
+              {saving ? 'GUARDANDO...' : 'GUARDAR'}
+            </button>
+            <button
+              onClick={handlePublish}
+              disabled={saving}
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 bg-green-600 text-white rounded-2xl font-black hover:bg-green-700 transition-all shadow-xl shadow-green-100 disabled:opacity-50 transform hover:-translate-y-1 active:scale-95"
+            >
+              <CheckCircle size={20} />
+              {saving ? 'PUBLICANDO...' : 'PUBLICAR'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

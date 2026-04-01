@@ -27,3 +27,22 @@ export async function updateTournament(data: Tournament) {
     return { success: false, error: err.message };
   }
 }
+
+export async function deleteTournament(id: string) {
+  try {
+    const { error } = await supabaseServer
+      .from('tournaments')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error de Supabase en Servidor:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error inesperado en Servidor:', err);
+    return { success: false, error: err.message };
+  }
+}

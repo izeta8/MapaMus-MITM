@@ -1,4 +1,4 @@
-export type TournamentStatus = 'planned' | 'revision_pending' | 'published' | 'finished' | 'canceled'
+export type TournamentStatus = 'planned' | 'revision_pending' | 'finished' | 'canceled'
 
 export interface Prize {
   rank: number;
