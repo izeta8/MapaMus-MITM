@@ -38,4 +38,5 @@ export interface Tournament {
   latitude: number | null;
   longitude: number | null;
   contact: Contact | null;
+  rules: string[] | null;
 }
