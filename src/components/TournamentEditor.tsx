@@ -104,7 +104,7 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
         {data.poster_url && (
           <div className="space-y-2">
             <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Cartel del Torneo</label>
-            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm group">
+            <div className="m-auto max-w-96 relative aspect-[3/4] w-full rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm group">
               <img
                 src={data.poster_url}
                 alt="Cartel del torneo"
@@ -201,7 +201,7 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
                 </select>
               </div>
               <div className="col-span-1 space-y-2">
-                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest text-black">Tantos</label>
+                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Tantos</label>
                   <select 
                     className="w-full px-2 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-center font-bold"
                     value={data.points_modality || ''}
