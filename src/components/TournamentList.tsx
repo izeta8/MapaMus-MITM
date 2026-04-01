@@ -11,7 +11,7 @@ interface TournamentListProps {
 
 export default function TournamentList({ tournaments, selectedId, onSelect }: TournamentListProps) {
   const statusConfig = {
-    revision_pending: { label: 'PENDIENTE', color: 'bg-amber-100 text-amber-700' },
+    revision_pending: { label: 'REVISION', color: 'bg-amber-100 text-amber-700' },
     planned: { label: 'PUBLICADO', color: 'bg-green-100 text-green-700' },
     published: { label: 'PUBLICADO', color: 'bg-green-100 text-green-700' },
     finished: { label: 'FINALIZADO', color: 'bg-gray-100 text-gray-700' },

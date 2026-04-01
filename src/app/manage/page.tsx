@@ -124,7 +124,7 @@ function ManageContent() {
               onChange={(e) => setStatusFilter(e.target.value)}
             >
               <option value="all">Todos los estados</option>
-              <option value="revision_pending">Pendientes</option>
+              <option value="revision_pending">Revision</option>
               <option value="planned">Publicados</option>
               <option value="finished">Finalizados</option>
               <option value="canceled">Cancelados</option>
