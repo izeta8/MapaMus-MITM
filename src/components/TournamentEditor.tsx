@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Tournament } from '@/types';
 import MapPicker from './MapPicker';
-import { Save, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import { Save, CheckCircle, XCircle, Trash2, Phone, Mail, Instagram, Facebook, MessageCircle, User } from 'lucide-react';
 import { updateTournament, deleteTournament } from '@/lib/actions';
 
 interface TournamentEditorProps {
@@ -15,6 +15,15 @@ interface TournamentEditorProps {
 
 const SEA_DEFAULT = { lat: 43.409265, lng: -2.039183 };
 
+const DEFAULT_CONTACT = {
+  name: '',
+  phone: '',
+  is_whatsapp: false,
+  instagram: '',
+  facebook: '',
+  email: ''
+};
+
 export default function TournamentEditor({ tournament, onSaved, onPublished, onCancel }: TournamentEditorProps) {
  
   console.log(tournament)
@@ -23,7 +32,8 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
   const [data, setData] = useState<Tournament>({
     ...tournament,
     latitude: tournament.latitude || SEA_DEFAULT.lat,
-    longitude: tournament.longitude || SEA_DEFAULT.lng
+    longitude: tournament.longitude || SEA_DEFAULT.lng,
+    contact: { ...DEFAULT_CONTACT, ...tournament.contact }
   });
   const [saving, setSaving] = useState(false);
 
@@ -31,7 +41,8 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
     setData({
       ...tournament,
       latitude: tournament.latitude || SEA_DEFAULT.lat,
-      longitude: tournament.longitude || SEA_DEFAULT.lng
+      longitude: tournament.longitude || SEA_DEFAULT.lng,
+      contact: { ...DEFAULT_CONTACT, ...tournament.contact }
     });
   }, [tournament]);
 
@@ -253,6 +264,110 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
                   }
                 })}
               />
+            </div>
+          </div>
+        </div>
+
+        {/* SECCIÓN DE CONTACTO */}
+        <div className="space-y-6 pt-10 border-t border-gray-100">
+          <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Información de Contacto</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                Nombre de Contacto
+              </label>
+              <div className="relative">
+                <input
+                  className="w-full pl-12 pr-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="Ej: Juan Pérez"
+                  value={data.contact?.name || ''}
+                  onChange={e => setData({
+                    ...data,
+                    contact: { ...(data.contact || {} as any), name: e.target.value }
+                  })}
+                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                  <User size={18} />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                <Mail size={12} /> Email
+              </label>
+              <input
+                type="email"
+                className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                placeholder="ejemplo@email.com"
+                value={data.contact?.email || ''}
+                onChange={e => setData({
+                  ...data,
+                  contact: { ...(data.contact || {} as any), email: e.target.value }
+                })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <Phone size={12} /> Teléfono
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <span className="text-[10px] font-black text-gray-400 group-hover:text-green-600 transition-colors uppercase flex items-center gap-1">
+                    <MessageCircle size={12} /> ¿WhatsApp?
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
+                    checked={data.contact?.is_whatsapp || false}
+                    onChange={e => setData({
+                      ...data,
+                      contact: { ...(data.contact || {} as any), is_whatsapp: e.target.checked }
+                    })}
+                  />
+                </label>
+              </div>
+              <input
+                className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                placeholder="Ej: 600 000 000"
+                value={data.contact?.phone || ''}
+                onChange={e => setData({
+                  ...data,
+                  contact: { ...(data.contact || {} as any), phone: e.target.value }
+                })}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <Instagram size={12} /> Instagram
+                </label>
+                <input
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="@usuario"
+                  value={data.contact?.instagram || ''}
+                  onChange={e => setData({
+                    ...data,
+                    contact: { ...(data.contact || {} as any), instagram: e.target.value }
+                  })}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <Facebook size={12} /> Facebook
+                </label>
+                <input
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="Usuario/Página"
+                  value={data.contact?.facebook || ''}
+                  onChange={e => setData({
+                    ...data,
+                    contact: { ...(data.contact || {} as any), facebook: e.target.value }
+                  })}
+                />
+              </div>
             </div>
           </div>
         </div>

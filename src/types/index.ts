@@ -8,8 +8,8 @@ export interface Prize {
 }
 
 export interface Contact {
-  nombre: string | null;
-  telefono: string | null;
+  name: string | null;
+  phone: string | null;
   is_whatsapp: boolean;
   instagram: string | null;
   facebook: string | null;
