@@ -20,7 +20,7 @@ export default function PosterSection({ poster_url }: PosterSectionProps) {
           : 'p-8 pb-4'
       }`}
     >
-      <div className={`mx-auto transition-all duration-300 ${isSticky ? 'max-w-56 md:max-w-60' : 'max-w-96'} relative`}>
+      <div className={`mx-auto transition-all duration-300 ${isSticky ? 'max-w-80' : 'max-w-96'} relative`}>
         {!isSticky && (
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block text-center mb-2">
             Cartel del Torneo
