@@ -101,7 +101,7 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
   }
 
   return (
-    <div id="editor" className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 mb-20">
+    <div id="editor" className="bg-white rounded-2xl shadow-2xl border border-gray-200 animate-in fade-in slide-in-from-bottom-4 duration-500 mb-20">
       
       <EditorHeader data={data} setData={setData} onCancel={onCancel} />
 
