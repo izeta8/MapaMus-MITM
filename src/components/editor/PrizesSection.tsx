@@ -8,15 +8,14 @@ interface PrizesSectionProps {
 
 export default function PrizesSection({ data, setData }: PrizesSectionProps) {
   return (
-    <div className="space-y-6 pt-10 border-t border-gray-100">
-      <div className="flex justify-between items-center">
-        <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Premios y Recompensas</label>
+    <div className="space-y-6">
+      <div className="flex justify-end items-center">
         <button 
           onClick={() => {
             const newPrizes = [...(data.prizes || []), { rank: (data.prizes?.length || 0) + 1, description: '', cash: 0, tags: [] }];
             setData({ ...data, prizes: newPrizes });
           }}
-          className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors"
+          className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
         >
           + AÑADIR PREMIO
         </button>

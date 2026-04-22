@@ -14,6 +14,8 @@ import ContactSection from './editor/ContactSection';
 import PrizesSection from './editor/PrizesSection';
 import RulesSection from './editor/RulesSection';
 import ActionFooter from './editor/ActionFooter';
+import CollapsibleSection from './editor/CollapsibleSection';
+import { MapPin, Info, Trophy, BookOpen, Contact, Swords } from 'lucide-react';
 
 interface TournamentEditorProps {
   tournament: Tournament;
@@ -40,7 +42,7 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
     ...tournament,
     latitude: tournament.latitude || SEA_DEFAULT.lat,
     longitude: tournament.longitude || SEA_DEFAULT.lng,
-    contact: { ...DEFAULT_CONTACT, ...tournament.contact }
+    contacts: tournament.contacts || []
   });
   const [saving, setSaving] = useState(false);
 
@@ -49,7 +51,7 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
       ...tournament,
       latitude: tournament.latitude || SEA_DEFAULT.lat,
       longitude: tournament.longitude || SEA_DEFAULT.lng,
-      contact: { ...DEFAULT_CONTACT, ...tournament.contact }
+      contacts: tournament.contacts || []
     });
   }, [tournament]);
 
@@ -105,27 +107,40 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
 
       <PosterSection poster_url={data.poster_url} />
 
-      <div className="p-8 space-y-10">
+      <div className="p-4 md:p-8 space-y-4">
         
-        <LocationSection data={data} setData={setData} />
+        <CollapsibleSection title="Ubicación" icon={MapPin}>
+          <LocationSection data={data} setData={setData} />
+        </CollapsibleSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CollapsibleSection title="Información Básica" icon={Info}>
           <BasicInfoSection data={data} setData={setData} />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Modalidad" icon={Swords}>
           <ModalitySection data={data} setData={setData} />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Contactos" icon={Contact}>
+          <ContactSection data={data} setData={setData} />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Premios" icon={Trophy}>
+          <PrizesSection data={data} setData={setData} />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Reglas" icon={BookOpen}>
+          <RulesSection data={data} setData={setData} />
+        </CollapsibleSection>
+
+        <div className="pt-6">
+          <ActionFooter 
+            saving={saving} 
+            handleDelete={handleDelete} 
+            handleSave={handleSave} 
+            handlePublish={handlePublish} 
+          />
         </div>
-
-        <ContactSection data={data} setData={setData} />
-
-        <PrizesSection data={data} setData={setData} />
-
-        <RulesSection data={data} setData={setData} />
-
-        <ActionFooter 
-          saving={saving} 
-          handleDelete={handleDelete} 
-          handleSave={handleSave} 
-          handlePublish={handlePublish} 
-        />
 
       </div>
     </div>

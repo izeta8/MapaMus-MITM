@@ -37,6 +37,6 @@ export interface Tournament {
   poster_url: string | null;
   latitude: number | null;
   longitude: number | null;
-  contact: Contact | null;
+  contacts: Contact[] | null;
   rules: string[] | null;
 }

@@ -8,15 +8,14 @@ interface RulesSectionProps {
 
 export default function RulesSection({ data, setData }: RulesSectionProps) {
   return (
-    <div className="space-y-6 pt-10 border-t border-gray-100">
-      <div className="flex justify-between items-center">
-        <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Reglas del Torneo</label>
+    <div className="space-y-6">
+      <div className="flex justify-end items-center">
         <button 
           onClick={() => {
             const newRules = [...(data.rules || []), ''];
             setData({ ...data, rules: newRules });
           }}
-          className="text-[10px] font-black bg-purple-50 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-100 transition-colors"
+          className="text-[10px] font-black bg-purple-50 text-purple-600 px-3 py-1.5 rounded-lg hover:bg-purple-100 transition-colors"
         >
           + AÑADIR REGLA
         </button>

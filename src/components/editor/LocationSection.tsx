@@ -9,7 +9,6 @@ interface LocationSectionProps {
 export default function LocationSection({ data, setData }: LocationSectionProps) {
   return (
     <div className="space-y-4">
-      <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Localización Geográfica</label>
       <div className="rounded-2xl overflow-hidden border-2 border-gray-100 shadow-inner">
         <MapPicker
           lat={data.latitude}
