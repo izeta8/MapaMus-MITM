@@ -42,7 +42,9 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
     ...tournament,
     latitude: tournament.latitude || SEA_DEFAULT.lat,
     longitude: tournament.longitude || SEA_DEFAULT.lng,
-    contacts: tournament.contacts || []
+    contacts: Array.isArray(tournament.contacts) ? tournament.contacts : [],
+    prizes: Array.isArray(tournament.prizes) ? tournament.prizes : [],
+    rules: Array.isArray(tournament.rules) ? tournament.rules : []
   });
   const [saving, setSaving] = useState(false);
 
@@ -51,7 +53,9 @@ export default function TournamentEditor({ tournament, onSaved, onPublished, onC
       ...tournament,
       latitude: tournament.latitude || SEA_DEFAULT.lat,
       longitude: tournament.longitude || SEA_DEFAULT.lng,
-      contacts: tournament.contacts || []
+      contacts: Array.isArray(tournament.contacts) ? tournament.contacts : [],
+      prizes: Array.isArray(tournament.prizes) ? tournament.prizes : [],
+      rules: Array.isArray(tournament.rules) ? tournament.rules : []
     });
   }, [tournament]);
 

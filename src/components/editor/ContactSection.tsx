@@ -16,7 +16,7 @@ const DEFAULT_CONTACT: Contact = {
 };
 
 export default function ContactSection({ data, setData }: ContactSectionProps) {
-  const contacts = data.contacts || [];
+  const contacts = Array.isArray(data.contacts) ? data.contacts : [];
 
   const updateContact = (index: number, updatedContact: Contact) => {
     const newContacts = [...contacts];
