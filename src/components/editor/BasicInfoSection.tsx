@@ -5,6 +5,17 @@ interface BasicInfoSectionProps {
   setData: (data: Tournament) => void;
 }
 
+// Función auxiliar para formatear la fecha a la zona horaria local del usuario
+const getLocalISODate = (dateString?: string) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  // Compensamos la diferencia de la zona horaria (en milisegundos)
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  const localDate = new Date(date.getTime() - tzOffset);
+  
+  return localDate.toISOString().slice(0, 16);
+};
+
 export default function BasicInfoSection({ data, setData }: BasicInfoSectionProps) {
   return (
     <div className="space-y-6">
@@ -32,7 +43,7 @@ export default function BasicInfoSection({ data, setData }: BasicInfoSectionProp
           <input
             type="datetime-local"
             className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none text-black text-sm"
-            value={data.tournament_date ? new Date(data.tournament_date).toISOString().slice(0, 16) : ''}
+            value={getLocalISODate(data.tournament_date)}
             onChange={e => setData({ ...data, tournament_date: new Date(e.target.value).toISOString() })}
           />
         </div>
