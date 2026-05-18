@@ -23,7 +23,7 @@ function cleanObject(obj: any): any {
 }
 
 /**
- * Server Action para actualizar un torneo usando la Service Role Key (master key)
+ * Server Action para actualizar un torneo usando la Secret Key (admin key)
  * Saltándose todas las políticas de RLS de Supabase.
  */
 export async function updateTournament(data: Tournament) {
