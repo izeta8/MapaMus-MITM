@@ -12,7 +12,8 @@ const DEFAULT_CONTACT: Contact = {
   is_whatsapp: false,
   instagram: '',
   facebook: '',
-  email: ''
+  email: '',
+  description: ''
 };
 
 export default function ContactSection({ data, setData }: ContactSectionProps) {
@@ -90,6 +91,18 @@ export default function ContactSection({ data, setData }: ContactSectionProps) {
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  Descripción (Rol / Cargo)
+                </label>
+                <input
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="Ej: Organizador principal, Inscripciones"
+                  value={contact.description || ''}
+                  onChange={e => updateContact(index, { ...contact, description: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
                   <Mail size={12} /> Email
                 </label>
                 <input
@@ -126,29 +139,28 @@ export default function ContactSection({ data, setData }: ContactSectionProps) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    <Instagram size={12} /> Instagram
-                  </label>
-                  <input
-                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
-                    placeholder="@usuario"
-                    value={contact.instagram || ''}
-                    onChange={e => updateContact(index, { ...contact, instagram: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    <Facebook size={12} /> Facebook
-                  </label>
-                  <input
-                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
-                    placeholder="Usuario/Página"
-                    value={contact.facebook || ''}
-                    onChange={e => updateContact(index, { ...contact, facebook: e.target.value })}
-                  />
-                </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <Instagram size={12} /> Instagram
+                </label>
+                <input
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="@usuario"
+                  value={contact.instagram || ''}
+                  onChange={e => updateContact(index, { ...contact, instagram: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <Facebook size={12} /> Facebook
+                </label>
+                <input
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-blue-500 focus:bg-white outline-none transition-all text-black font-medium"
+                  placeholder="Usuario/Página"
+                  value={contact.facebook || ''}
+                  onChange={e => updateContact(index, { ...contact, facebook: e.target.value })}
+                />
               </div>
             </div>
           </div>

@@ -96,9 +96,15 @@ function ManageContent() {
       <div className="max-w-5xl mx-auto">
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <Link href="/" className="text-blue-600 flex items-center gap-2 text-sm font-bold mb-2 hover:underline">
-              <ArrowLeft size={16} /> VOLVER A PENDIENTES
-            </Link>
+            <div className="flex gap-3 items-center text-sm font-bold mb-2">
+              <Link href="/" className="text-blue-600 flex items-center gap-1.5 hover:underline">
+                <ArrowLeft size={16} /> VOLVER A PENDIENTES
+              </Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/organizers" className="text-blue-600 flex items-center gap-1.5 hover:underline">
+                ORGANIZADORES
+              </Link>
+            </div>
             <h1 className="text-3xl font-bold text-gray-900">Gestión de Torneos</h1>
             <p className="text-gray-500">Busca y edita cualquier torneo de la base de datos</p>
           </div>

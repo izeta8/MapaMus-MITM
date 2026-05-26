@@ -99,7 +99,13 @@ function DashboardContent() {
             <h1 className="text-3xl font-bold text-gray-900">MapaMus MITM</h1>
             <p className="text-gray-500">Panel de revisión de torneos scrapper</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link 
+              href="/organizers" 
+              className="bg-amber-50 border border-amber-200 text-amber-700 px-6 py-2 rounded-xl text-sm font-bold hover:bg-amber-100/50 transition-colors shadow-sm"
+            >
+              ORGANIZADORES
+            </Link>
             <Link 
               href="/manage" 
               className="bg-white border border-gray-200 text-gray-700 px-6 py-2 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm"

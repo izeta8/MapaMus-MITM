@@ -14,6 +14,7 @@ export interface Contact {
   instagram: string | null;
   facebook: string | null;
   email: string | null;
+  description: string | null;
 }
 
 export interface RegistrationInfo {
@@ -40,3 +41,18 @@ export interface Tournament {
   contacts: Contact[] | null;
   rules: string[] | null;
 }
+
+export interface Organizer {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  slug: string;
+  logo_url: string | null;
+  contacts: Contact[] | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  is_verified: boolean;
+}
+

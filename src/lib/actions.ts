@@ -66,3 +66,26 @@ export async function deleteTournament(id: string) {
     return { success: false, error: err.message };
   }
 }
+
+export async function verifyOrganizerAction(id: string) {
+  try {
+    const { error } = await supabaseServer
+      .from('organizers')
+      .update({ 
+        is_verified: true,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error de Supabase en Servidor (Verify Organizer):', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error inesperado en Servidor (Verify Organizer):', err);
+    return { success: false, error: err.message };
+  }
+}
+
