@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Organizer, Contact } from '@/types';
 import { verifyOrganizerAction } from '@/lib/actions';
+import OrganizerDetailDrawer from '@/components/OrganizerDetailDrawer';
 import { 
   Loader2, 
   ArrowLeft, 
@@ -28,6 +29,7 @@ import Link from 'next/link';
 
 export default function OrganizersPage() {
   const [organizers, setOrganizers] = useState<Organizer[]>([]);
+  const [selectedOrganizer, setSelectedOrganizer] = useState<Organizer | null>(null);
   const [loading, setLoading] = useState(true);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,6 +63,9 @@ export default function OrganizersPage() {
       // Actualizar el estado local
       setOrganizers(prev => 
         prev.map(org => org.id === id ? { ...org, is_verified: true } : org)
+      );
+      setSelectedOrganizer(prev => 
+        prev && prev.id === id ? { ...prev, is_verified: true } : prev
       );
     } else {
       console.error('Error verifying organizer:', result.error);
@@ -162,6 +167,7 @@ export default function OrganizersPage() {
                       org={org} 
                       onVerify={handleVerify} 
                       isVerifying={verifyingId === org.id} 
+                      onSelect={setSelectedOrganizer}
                     />
                   ))}
                 </div>
@@ -185,6 +191,7 @@ export default function OrganizersPage() {
                     <OrganizerCard 
                       key={org.id} 
                       org={org} 
+                      onSelect={setSelectedOrganizer}
                     />
                   ))}
                 </div>
@@ -195,6 +202,14 @@ export default function OrganizersPage() {
         )}
 
       </div>
+
+      {/* Detalle del Organizador en Cajón Lateral */}
+      <OrganizerDetailDrawer 
+        organizer={selectedOrganizer}
+        onClose={() => setSelectedOrganizer(null)}
+        onVerify={handleVerify}
+        isVerifying={verifyingId !== null}
+      />
     </main>
   );
 }
@@ -203,9 +218,10 @@ interface OrganizerCardProps {
   org: Organizer;
   onVerify?: (id: string) => void;
   isVerifying?: boolean;
+  onSelect: (org: Organizer) => void;
 }
 
-function OrganizerCard({ org, onVerify, isVerifying = false }: OrganizerCardProps) {
+function OrganizerCard({ org, onVerify, isVerifying = false, onSelect }: OrganizerCardProps) {
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -233,11 +249,14 @@ function OrganizerCard({ org, onVerify, isVerifying = false }: OrganizerCardProp
   const contactsList: Contact[] = Array.isArray(org.contacts) ? org.contacts : [];
 
   return (
-    <div className={`bg-white rounded-2xl shadow-sm border transition-all duration-300 hover:shadow-md flex flex-col justify-between overflow-hidden ${
-      org.is_verified 
-        ? 'border-l-4 border-l-emerald-500 border-gray-200' 
-        : 'border-l-4 border-l-amber-500 border-gray-200 bg-amber-50/10'
-    }`}>
+    <div 
+      onClick={() => onSelect(org)}
+      className={`cursor-pointer hover:bg-gray-50/40 hover:scale-[1.01] bg-white rounded-2xl shadow-sm border transition-all duration-300 hover:shadow-md flex flex-col justify-between overflow-hidden ${
+        org.is_verified 
+          ? 'border-l-4 border-l-emerald-500 border-gray-200' 
+          : 'border-l-4 border-l-amber-500 border-gray-200 bg-amber-50/10'
+      }`}
+    >
       
       {/* Información del Organizador */}
       <div className="p-6">
@@ -297,6 +316,7 @@ function OrganizerCard({ org, onVerify, isVerifying = false }: OrganizerCardProp
                     href={`https://www.google.com/maps/search/?api=1&query=${org.latitude},${org.longitude}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 mt-1 hover:underline"
                   >
                     Ver en Google Maps <ExternalLink size={10} />
@@ -360,6 +380,7 @@ function OrganizerCard({ org, onVerify, isVerifying = false }: OrganizerCardProp
                           <Mail size={12} className="text-gray-400 shrink-0" />
                           <a 
                             href={`mailto:${contact.email}`} 
+                            onClick={(e) => e.stopPropagation()}
                             className="font-semibold text-blue-600 hover:underline truncate"
                           >
                             {contact.email}
@@ -400,7 +421,10 @@ function OrganizerCard({ org, onVerify, isVerifying = false }: OrganizerCardProp
       {!org.is_verified && onVerify && (
         <div className="px-6 py-4 bg-amber-50/50 border-t border-amber-100 flex justify-end">
           <button
-            onClick={() => onVerify(org.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onVerify(org.id);
+            }}
             disabled={isVerifying}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all duration-200 shadow-md shadow-amber-500/10 hover:shadow-amber-500/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
           >
