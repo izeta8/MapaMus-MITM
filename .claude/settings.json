@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run build)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch*)",
+      "Bash(git checkout *)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Bash(git rebase*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command", "command": "node ../.agent/scripts/check-schema-change.cjs --self MapaMus-MITM" }]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "node ../.agent/scripts/check-schema-change.cjs --self MapaMus-MITM" }]
+      },
+      {
+        "matcher": "mcp__supabase__apply_migration",
+        "hooks": [{ "type": "command", "command": "node ../.agent/scripts/check-schema-change.cjs --self MapaMus-MITM" }]
+      }
+    ]
+  }
+}
